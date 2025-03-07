@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(quickjs LANGUAGES C)
+project(quickjs LANGUAGES C CXX)
 
 include(CheckCCompilerFlag)
 include(GNUInstallDirs)
@@ -385,6 +385,17 @@ if(QJS_BUILD_EXAMPLES)
     target_include_directories(test_fib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     target_compile_definitions(test_fib PRIVATE ${qjs_defines})
     target_link_libraries(test_fib qjs)
+
+
+    add_executable(HelloQuickjs
+        demo/HelloQuickjs3.cpp
+    )
+    add_qjs_libc_if_needed(HelloQuickjs)
+    target_include_directories(HelloQuickjs PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+    target_compile_definitions(HelloQuickjs PRIVATE ${qjs_defines})
+    set_property(TARGET HelloQuickjs PROPERTY CXX_STANDARD 20)
+    target_link_libraries(HelloQuickjs qjs)
+
 endif()
 
 # Install target

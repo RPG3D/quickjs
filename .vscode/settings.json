@@ -1,0 +1,7 @@
+{
+    "files.exclude": {
+        ".github/": true,
+        "MSVCBuild/": true,
+        "tests/": true
+    }
+}
