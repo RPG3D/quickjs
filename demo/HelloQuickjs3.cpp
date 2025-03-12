@@ -4,7 +4,8 @@
 #include <string>
 #include <iostream>
 #include "cutils.h"
-#include <unordered_map>
+
+#include "Vector2.h"
  
 JSRuntime* QJSRuntime = nullptr;
 JSContext* QJSContext = nullptr;
@@ -28,7 +29,6 @@ struct UEClassWrapper {
 };
 
 static JSClassID ue_module_class_id;
-static std::unordered_map<std::string, UEClassWrapper> uclass_registry;
 
 // 2. UE Module Property Getter (Dynamically exports UClasses)
 static JSValue ue_module_get_property(JSContext *ctx, JSValue obj, JSAtom atom,
@@ -37,54 +37,11 @@ static JSValue ue_module_get_property(JSContext *ctx, JSValue obj, JSAtom atom,
 
     const char* name = JS_AtomToCString(ctx, atom);
 
-    // Check if class already exists
-    auto it = uclass_registry.find(name);
-    if (it != uclass_registry.end()) {
-        return JS_NewObjectClass(ctx, it->second.class_id);
-    }
-
-    // Find UClass in Unreal's reflection system
-    void* uclass = nullptr;
-    if (!uclass) {
-        return JS_ThrowReferenceError(ctx, "UClass '%s' not found", name);
-    }
-
-    // 3. Create JS Class for UClass
-    JSClassID class_id;
-    JS_NewClassID(JS_GetRuntime(ctx), &class_id);
-    
-    JSClassDef class_def = {
-        .class_name = name,
-        .finalizer = [](JSRuntime* rt, JSValue obj) {
-            void* uobj = nullptr;
-            if (uobj) {
-                // Handle UE object lifetime if needed
-            }
-        }
-    };
-    
-    JS_NewClass(JS_GetRuntime(ctx), class_id, &class_def);
-    
-    // 4. Create Constructor
-    JSValue ctor = JS_NewCFunction2(ctx, 
-        [](JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv) {
-            // Create or retrieve UE object
-            void* uclass = nullptr;
-            void* uobj = nullptr;
-            
-            JSValue obj = JS_NewObjectClass(ctx, 0);
-            JS_SetOpaque(obj, uobj);
-            return obj;
-        }, 
-        name, 0, JS_CFUNC_constructor, 0
-    );
-
-    // 5. Bind UFUNCTIONS
-   
+    JSValue ctor = Vector2::js_Init(ctx, nullptr);
 
     // 6. Register and Cache
-    uclass_registry.emplace(name, UEClassWrapper{class_id, uclass});
-    JS_SetPropertyStr(ctx, obj, name, ctor);
+    //uclass_registry.emplace(name, UEClassWrapper{class_id, uclass});
+    //JS_SetPropertyStr(ctx, obj, name, ctor);
     
     return ctor;
 }
@@ -122,7 +79,10 @@ int TestExportClassToJavaScript()
 
 	char JSScript[] = 
     R"( import UE from 'UE';
-        const Actor = UE.Actor;
+        const vec = new UE.Vector2(3, 4);
+        print(vec.X);
+        print(vec.norm);
+        print(vec.norm());
         )";
  
     JSValue RetValue = JS_Eval(QJSContext, JSScript, strlen(JSScript), "", JS_EVAL_TYPE_MODULE);

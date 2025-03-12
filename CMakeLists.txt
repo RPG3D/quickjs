@@ -388,6 +388,7 @@ if(QJS_BUILD_EXAMPLES)
 
 
     add_executable(HelloQuickjs
+        demo/Vector2.cpp
         demo/HelloQuickjs3.cpp
     )
     add_qjs_libc_if_needed(HelloQuickjs)
