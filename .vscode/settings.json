@@ -3,5 +3,13 @@
         ".github/": true,
         "MSVCBuild/": true,
         "tests/": true
+    },
+    "files.associations": {
+        "cmath": "c",
+        "system_error": "cpp",
+        "type_traits": "cpp",
+        "xlocmon": "cpp",
+        "xtr1common": "cpp",
+        "xutility": "cpp"
     }
 }

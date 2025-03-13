@@ -35,10 +35,4 @@ public:
     static JSClassID ClassID;
     static JSClassDef ClassDef;
 
-    inline static const JSCFunctionListEntry ProtoFuncs[] = {
-        JS_CGETSET_MAGIC_DEF("X", js_GetValue,  js_SetValue, 0),
-        JS_CGETSET_MAGIC_DEF("Y", js_GetValue,  js_SetValue, 1),
-        JS_CFUNC_DEF("norm", 0, js_point_norm),
-    };
-    
 };
