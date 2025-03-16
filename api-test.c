@@ -8,7 +8,7 @@
 
 #define MAX_TIME 10
 
-static int timeout_interrupt_handler(JSRuntime *rt, void *opaque) 
+static int timeout_interrupt_handler(JSRuntime *rt, void *opaque)
 {
     int *time = (int *)opaque;
     if (*time <= MAX_TIME)
@@ -18,7 +18,7 @@ static int timeout_interrupt_handler(JSRuntime *rt, void *opaque)
 
 static void sync_call(void)
 {
-    const char *code = 
+    const char *code =
 "(function() { \
     try { \
         while (true) {} \
@@ -43,7 +43,7 @@ static void sync_call(void)
 
 static void async_call(void)
 {
-    const char *code = 
+    const char *code =
 "(async function() { \
     const loop = async () => { \
         await Promise.resolve(); \
@@ -74,7 +74,8 @@ static void async_call(void)
     JS_FreeRuntime(rt);
 }
 
-static JSValue save_value(JSContext *ctx, JSValue this_val, int argc, JSValue *argv)
+static JSValue save_value(JSContext *ctx, JSValueConst this_val,
+                          int argc, JSValueConst *argv)
 {
     assert(argc == 1);
     JSValue *p = (JSValue *)JS_GetContextOpaque(ctx);
@@ -97,8 +98,6 @@ static void async_call_stack_overflow(void)
 
     JSRuntime *rt = JS_NewRuntime();
     JSContext *ctx = JS_NewContext(rt);
-    JS_SetMaxStackSize(rt, 128 * 1024);
-    JS_UpdateStackTop(rt);
     JSValue value = JS_UNDEFINED;
     JS_SetContextOpaque(ctx, &value);
     JSValue global = JS_GetGlobalObject(ctx);
