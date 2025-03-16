@@ -6,8 +6,8 @@ JSValue Vector2::js_Init(JSContext* ctx, JSModuleDef* m)
     JSValue proto, obj;
     JS_NewClassID(JS_GetRuntime(ctx), &ClassID);
     JS_NewClass(JS_GetRuntime(ctx), ClassID, &ClassDef);
-    proto = JS_NewObject(ctx);
-    JS_SetClassProto(ctx, ClassID, proto);
+    //proto = JS_NewObject(ctx);
+    //JS_SetClassProto(ctx, ClassID, proto);
 
     obj = JS_NewCFunction2(ctx, js_constructor, "Vector2", 2, JS_CFUNC_constructor_or_func, 0);
     if(m)
