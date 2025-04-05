@@ -8,7 +8,7 @@
         "name": "(Windows) Launch",
         "type": "cppvsdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/MSVCBuild/Debug/HelloQuickjs.exe",
+        "program": "${workspaceFolder}/MSVC/Debug/HelloQuickjs.exe",
         "args": [],
         "stopAtEntry": false,
         "cwd": "${fileDirname}",

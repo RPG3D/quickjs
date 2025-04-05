@@ -11,4 +11,4 @@ out/
 CMakeUserPresets.json
 fuzz
 #.vscode/
-MSVCBuild/
+MSVC/

@@ -80,8 +80,8 @@ int TestExportClassToJavaScript()
 	char JSScript[] = 
     R"( import UE from 'UE';
         const vec = new UE.Vector2(3, 4);
-        print(vec.X);
-        print(vec.norm);
+        vec.X = 30;
+        vec.Y = 40;
         print(vec.norm());
         )";
  
