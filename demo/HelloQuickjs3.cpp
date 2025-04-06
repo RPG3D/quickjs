@@ -81,7 +81,7 @@ int TestExportClassToJavaScript()
     R"( import UE from 'UE';
         const vec = new UE.Vector2(3, 4);
         vec.X = 30;
-        vec.Y = 40;
+        print(vec.X);
         print(vec.norm());
         )";
  

@@ -26,9 +26,6 @@ public:
 
     static JSValue js_SetValue(JSContext* ctx, JSValueConst this_val, JSValueConst v, int magic);
 
-    static JSValue js_GetProperty(JSContext *ctx, JSValue this_val, JSAtom atom,
-        JSValue receiver);
-
     static JSValue js_point_norm(JSContext *ctx, JSValue this_val,
         int argc, JSValue *argv);
 

@@ -1,19 +1,30 @@
 
 #include "Vector2.h"
 
+static const JSCFunctionListEntry Vector2_proto_funcs[] = {
+    JS_CGETSET_MAGIC_DEF("X", Vector2::js_GetValue, Vector2::js_SetValue, 0),
+    JS_CGETSET_MAGIC_DEF("Y", Vector2::js_GetValue, Vector2::js_SetValue, 1),
+    JS_CFUNC_DEF("norm", 0, Vector2::js_point_norm),
+};
+
+
 JSValue Vector2::js_Init(JSContext* ctx, JSModuleDef* m)
 {
     JSValue proto, obj;
     JS_NewClassID(JS_GetRuntime(ctx), &ClassID);
     JS_NewClass(JS_GetRuntime(ctx), ClassID, &ClassDef);
-    //proto = JS_NewObject(ctx);
-    //JS_SetClassProto(ctx, ClassID, proto);
+    proto = JS_NewObject(ctx);
+   
+    JS_SetPropertyFunctionList(ctx, proto, Vector2_proto_funcs, countof(Vector2_proto_funcs));
 
     obj = JS_NewCFunction2(ctx, js_constructor, "Vector2", 2, JS_CFUNC_constructor_or_func, 0);
     if(m)
     {
         JS_SetModuleExport(ctx, m, "Vector2", obj);
     }
+    
+    JS_SetClassProto(ctx, ClassID, proto);
+    JS_SetConstructor(ctx, obj, proto);
 
     return obj;
 }
@@ -71,27 +82,6 @@ JSValue Vector2::js_SetValue(JSContext* ctx, JSValueConst this_val, JSValueConst
     return JS_UNDEFINED;
 }
 
-JSValue Vector2::js_GetProperty(JSContext *ctx, JSValue this_val, JSAtom atom,
-    JSValue receiver)
-{
-    Vector2 *s = (Vector2*)JS_GetOpaque2(ctx, this_val, ClassID);
-    const char* str = JS_AtomToCString(ctx, atom);
-    if (strcmp(str, "X") == 0)
-    {
-        return JS_NewFloat64(ctx, s->X);
-    }
-    else if (strcmp(str, "Y") == 0)
-    {
-        return JS_NewFloat64(ctx, s->Y);
-    }
-    else if(strcmp(str, "norm") == 0)
-    {
-        return JS_NewCFunction(ctx, js_point_norm, "norm", 0);
-    }
-
-    return JS_NewFloat64(ctx, 147258);
-}
-
 JSValue Vector2::js_point_norm(JSContext *ctx, JSValue this_val,
     int argc, JSValue *argv)
 {
@@ -104,14 +94,7 @@ JSValue Vector2::js_point_norm(JSContext *ctx, JSValue this_val,
 
 JSClassID Vector2::ClassID;
 
-static JSClassExoticMethods ExoticMethods =
-{
-    .get_property = Vector2::js_GetProperty
-};
-
-
 JSClassDef Vector2::ClassDef = {
     .class_name = "Vector2",
     .finalizer = js_finalizer,
-    .exotic = &ExoticMethods,
 };
