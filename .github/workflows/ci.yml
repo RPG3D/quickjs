@@ -209,31 +209,6 @@ jobs:
           cl.exe /DJS_NAN_BOXING=0 /Zs cxxtest.cc
           cl.exe /DJS_NAN_BOXING=1 /Zs cxxtest.cc
 
-  windows-msvc-vs2019:
-    runs-on: windows-2019
-    strategy:
-      fail-fast: false
-      matrix:
-        arch: [x64, Win32]
-        buildType: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - name: build
-        run: |
-          cmake -B build -DQJS_BUILD_EXAMPLES=ON -G "Visual Studio 16 2019" -A ${{matrix.arch}}
-          cmake --build build --config ${{matrix.buildType}} --target qjs_exe
-      - name: stats
-        run: |
-          build\${{matrix.buildType}}\qjs.exe -qd
-      - name: Set up Visual Studio shell
-        uses: egor-tensin/vs-shell@v2
-        with:
-          arch: ${{ matrix.arch == 'x64' && 'x64' || 'x86' }}
-      - name: cxxtest
-        run: |
-          cl.exe /DJS_NAN_BOXING=0 /Zs cxxtest.cc
-          cl.exe /DJS_NAN_BOXING=1 /Zs cxxtest.cc
-
   windows-clang:
     runs-on: windows-latest
     strategy:
@@ -422,13 +397,13 @@ jobs:
       - name: result
         run: ls -lh build
   wasi:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: jcbhmr/setup-wasmtime@v2
       - name: setup wasi-sdk
         run: |
-          wget -nv https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-21/wasi-sdk_21.0_amd64.deb -P /tmp
+          wget -nv https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-25/wasi-sdk-25.0-x86_64-linux.deb -P /tmp
           sudo apt install /tmp/wasi-sdk*.deb
       - name: test
         run: |
